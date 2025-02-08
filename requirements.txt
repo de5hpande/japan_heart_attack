@@ -1,0 +1,10 @@
+pandas
+numpy
+scikit-learn
+matplotlib
+seaborn
+dill
+pymongo
+python-dotenv
+certifi
+-e .

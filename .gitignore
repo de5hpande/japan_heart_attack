@@ -1,0 +1,5 @@
+venv/
+japan_heart_attack.egg-info/
+.env
+Artifacts/
+logs/
