@@ -7,4 +7,5 @@ dill
 pymongo
 python-dotenv
 certifi
--e .
+pyaml
+# -e .
