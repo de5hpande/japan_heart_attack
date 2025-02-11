@@ -8,4 +8,7 @@ pymongo
 python-dotenv
 certifi
 pyaml
+xgboost
+catboost
+imbalanced-learn
 # -e .
