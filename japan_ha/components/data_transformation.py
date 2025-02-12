@@ -24,6 +24,7 @@ from sklearn.pipeline import Pipeline
 from imblearn.pipeline import Pipeline as ImbPipeline  # Use imblearn's Pipeline for SMOTE
 from imblearn.over_sampling import SMOTE
 from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import LabelEncoder
 
 class DataTransformation:
     def __init__(self,data_validation_arifact:DataValidationArtifact,
@@ -49,7 +50,7 @@ class DataTransformation:
             numerical_columns =  ['Age', 'Cholesterol_Level','Stress_Levels', 'BMI','Heart_Rate','Systolic_BP','Diastolic_BP']
             categorical_columns =  ['Gender', 'Region', 'Smoking_History', 'Diabetes_History',
                                     'Hypertension_History', 'Diet_Quality', 'Alcohol_Consumption', 'Family_History'
-                                    ,"Physical_Activity"]
+                                    ,"Physical_Activity",]
 
             # Numerical pipeline with KNNImputer and StandardScaler
             num_pipeline = Pipeline(
@@ -101,8 +102,6 @@ class DataTransformation:
             train_df=DataTransformation.read_data(self.data_validation_artifact.valid_train_file_path)
             test_df=DataTransformation.read_data(self.data_validation_artifact.valid_test_file_path)
 
-            print(train_df.columns)
-            print(test_df.columns)
 
             ##training data frame
             input_feature_train_df=train_df.drop(columns=[TARGET_COLUMN],axis=1)
@@ -113,6 +112,12 @@ class DataTransformation:
             input_feature_test_df=test_df.drop(columns=[TARGET_COLUMN],axis=1)
             target_feature_test_df=test_df[TARGET_COLUMN]
 
+            label_encoder = LabelEncoder()
+
+            # Convert 'Yes' → 1 and 'No' → 0
+            target_feature_train_df = label_encoder.fit_transform(target_feature_train_df)
+            target_feature_test_df = label_encoder.transform(target_feature_test_df)
+
             
 
             preprocessor=self.get_data_transformer_object()
@@ -121,12 +126,14 @@ class DataTransformation:
             # transformed_input_test_feature=preprocessor.fit_resample(input_feature_test_df)
 
             transformed_input_train_feature, target_feature_train_df = preprocessor.fit_resample(input_feature_train_df, target_feature_train_df)
-
+            print(target_feature_train_df)
             # Fit and resample the preprocessor on the test data
             transformed_input_test_feature, target_feature_test_df = preprocessor.fit_resample(input_feature_test_df, target_feature_test_df)
-
+            print(target_feature_test_df)
             train_arr = np.c_[transformed_input_train_feature, np.array(target_feature_train_df) ]
             test_arr = np.c_[ transformed_input_test_feature, np.array(target_feature_test_df) ]
+            print(train_arr)
+            print(test_arr)
 
             #save numpy array data
             save_numpy_array_data( self.data_transformation_config.transformed_train_file_path, array=train_arr, )

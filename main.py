@@ -1,11 +1,14 @@
+from japan_ha.exception.exception import JapanHeartAttackException
 from japan_ha.components.data_ingestion import DataIngestion
 from japan_ha.components.data_validation import DataValidation
-from japan_ha.components.data_transformation import DataTransformation
-from japan_ha.exception.exception import JapanHeartAttackException
+from japan_ha.components.data_validation import DataValidationConfig,DataValidationArtifact
 from japan_ha.logging.logger import logging
-from japan_ha.entity.config_entity import DataIngestionConfig,DataValidationConfig,DataTransformationConfig
+from japan_ha.entity.config_entity import DataIngestionConfig
 from japan_ha.entity.config_entity import TrainingPipelineConfig
-from japan_ha.entity.artifacts_entity import DataIngestionArtifact,DataValidationArtifact,DataTransformationArtifact
+from japan_ha.components.data_transformation import DataTransformationConfig
+from japan_ha.components.data_transformation import DataTransformation
+from japan_ha.components.model_trainer import ModelTrainerConfig
+from japan_ha.components.model_trainer import ModelTrainer
 import sys
 
 if __name__=="__main__":
@@ -35,6 +38,13 @@ if __name__=="__main__":
         data_transformation_artifacts=data_transformation.initiate_data_transformation()
         logging.info("data transformation completed")
         print(data_transformation_artifacts)
+
+        logging.info("Model Training started")
+        model_trainer_config=ModelTrainerConfig(trainingpipelineconfig)
+        model_trainer=ModelTrainer(model_trainer_config=model_trainer_config,data_transformation_artifact=data_transformation_artifacts)
+        model_trainer_artifact=model_trainer.initiate_model_trainer()
+        print(model_trainer_artifact)
+
         
     except Exception as e:
         raise JapanHeartAttackException(e,sys)
