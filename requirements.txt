@@ -11,4 +11,9 @@ pyaml
 xgboost
 catboost
 imbalanced-learn
+mlflow
+dagshub
+fastapi
+uvicorn
+python-multipart
 # -e .
