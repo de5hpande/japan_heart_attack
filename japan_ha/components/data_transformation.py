@@ -42,9 +42,9 @@ class DataTransformation:
         This function is responsible for data preprocessing (without SMOTE).
         '''
         try:
-            numerical_columns = ['Age', 'Cholesterol_Level', 'Stress_Levels', 'BMI', 'Heart_Rate', 'Systolic_BP', 'Diastolic_BP']
-            categorical_columns = ['Gender', 'Region', 'Smoking_History', 'Diabetes_History',
-                                   'Hypertension_History', 'Diet_Quality', 'Alcohol_Consumption', 'Family_History',
+            numerical_columns = ['Age', 'Cholesterol_Level', 'BMI', 'Heart_Rate', 'Systolic_BP', 'Diastolic_BP','Stress_Levels']
+            categorical_columns = ['Gender', 'Smoking_History', 'Diabetes_History',
+                                   'Hypertension_History', 'Alcohol_Consumption', 'Family_History',
                                    "Physical_Activity"]
 
             # Numerical pipeline
@@ -61,6 +61,7 @@ class DataTransformation:
                     ("imputer", SimpleImputer(strategy="most_frequent")),  # SimpleImputer for categorical data
                     ("one_hot_encoder", OneHotEncoder(handle_unknown="ignore")),
                     ("scaler", StandardScaler(with_mean=False))
+                    
                 ]
             )
 
@@ -115,6 +116,11 @@ class DataTransformation:
             target_feature_train_df = label_encoder.fit_transform(target_feature_train_df)
             target_feature_test_df = label_encoder.transform(target_feature_test_df)
 
+            print("Before Transformation:")
+            print(input_feature_train_df.head())
+            print(input_feature_train_df.dtypes)
+
+
             # Get preprocessing object
             preprocessor = self.get_data_transformer_object()
 
@@ -124,7 +130,11 @@ class DataTransformation:
 
             # Apply SMOTE only on training data
             transformed_input_train_feature, target_feature_train_df = self.apply_smote(transformed_input_train_feature, target_feature_train_df)
+            print(transformed_input_train_feature.shape)
+            print(target_feature_train_df.shape)
 
+            print(transformed_input_test_feature.shape)
+            print(target_feature_test_df.shape)
             # Combine transformed data
             train_arr = np.c_[transformed_input_train_feature, np.array(target_feature_train_df)]
             test_arr = np.c_[transformed_input_test_feature, np.array(target_feature_test_df)]

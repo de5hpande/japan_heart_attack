@@ -48,7 +48,7 @@ class JapanDataExtract():
             raise JapanHeartAttackException(e,sys)
 
 if __name__=='__main__':
-    FILE_PATH="data\japan_heart_attack_dataset.csv"
+    FILE_PATH="data\japan_final_ha.csv"
     DATABASE="japandata"
     collection="japan_heart_attack"
     japanobj=JapanDataExtract()
